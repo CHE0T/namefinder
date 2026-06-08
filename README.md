@@ -10,12 +10,22 @@ Type a few keywords, get AI-generated name ideas, and instantly see which `.com`
 
 - **Python 3.11+** — [python.org](https://www.python.org/downloads/)
 - **Node.js 18+** — [nodejs.org](https://nodejs.org/)
+- **Git** — [git-scm.com](https://git-scm.com/downloads/)
 
 ---
 
 ## Quick start
 
-### Windows
+### Step 1 — Clone the repo
+
+```bash
+git clone https://github.com/CHE0T/namefinder.git
+cd namefinder
+```
+
+### Step 2 — Start the app
+
+#### Windows
 
 Double-click `scripts\start.bat`.
 
@@ -23,7 +33,7 @@ It will automatically create virtual environments, install all dependencies, and
 
 Open **http://localhost:5173** in your browser.
 
-### Mac / Linux
+#### Mac / Linux
 
 ```bash
 chmod +x scripts/start.sh
