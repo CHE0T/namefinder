@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
-kill_port() {
-  local port=$1
-  local pid
-  pid=$(netstat -ano 2>/dev/null | awk "/LISTENING/ && /:${port} /{print \$NF}" | head -1)
-  if [ -n "$pid" ] && [ "$pid" != "0" ]; then
+for port in 8001 8002 5173; do
+  pid=$(lsof -ti tcp:"$port" 2>/dev/null)
+  if [ -n "$pid" ]; then
     echo "Stopping port $port (PID $pid)..."
-    taskkill //PID "$pid" //F > /dev/null 2>&1
+    kill -9 "$pid" 2>/dev/null
   else
-    echo "Nothing running on port $port."
+    echo "Nothing on port $port."
   fi
-}
-
-kill_port 8001
-kill_port 8002
-kill_port 5175
+done
 echo "Done."

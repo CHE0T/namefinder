@@ -1224,7 +1224,7 @@ const DomainChecker = forwardRef(function DomainChecker({
                                   <input
                                     className="manual-price-input"
                                     type="text"
-                                    placeholder={r.status === 'unknown' ? 'price or "taken"' : 'e.g. 7,295'}
+                                    placeholder='price or "taken"'
                                     value={draftPrices[r.domain] ?? manualPrices[r.domain] ?? ''}
                                     onChange={e => handleManualPriceChange(r.domain, e)}
                                     onFocus={e => {

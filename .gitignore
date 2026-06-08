@@ -10,6 +10,14 @@ node_modules/
 dist/
 .env.local
 
+# Test / dev artifacts
+frontend/test_group_logic.mjs
+frontend/test-results/
+frontend/pw-test/
+pw-temp/
+test_backend_*.py
+test_backend_*.json
+
 # Misc
 .DS_Store
 *.log

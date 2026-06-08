@@ -513,7 +513,23 @@ async def _check_parking_page(client: httpx.AsyncClient, domain: str, timeout: f
                 logger.info("[%s] Afternic: no active listing (title=%r) — marking unknown", domain, check_title[:60])
                 return _result(domain, "unknown", purchase_url=_GODADDY_URL.format(domain=domain)), True
         else:
-            purchase_url = _GODADDY_URL.format(domain=domain)
+            # Afternic signal in page body but redirect didn't land on afternic.com.
+            # Verify via canonical URL rather than assuming it's an active listing.
+            canonical = f"https://www.afternic.com/forsale/{domain}"
+            try:
+                r_check = await client.get(canonical, headers=_BROWSER_HEADERS, timeout=8)
+                check_title = (BeautifulSoup(r_check.text, "lxml").title.string or "").lower()
+            except Exception:
+                check_title = ""
+            if "for sale" in check_title:
+                purchase_url = _GODADDY_URL.format(domain=domain)
+                logger.info("[%s] Afternic (body signal): listing confirmed (title=%r)", domain, check_title[:60])
+            elif not check_title:
+                logger.info("[%s] Afternic (body signal): canonical check failed — marking unknown", domain)
+                return _result(domain, "unknown", purchase_url=_GODADDY_URL.format(domain=domain)), True
+            else:
+                logger.info("[%s] Afternic (body signal): not listed (title=%r) — marking taken", domain, check_title[:60])
+                return _result(domain, "taken"), True
         price = None  # Afternic/GoDaddy loads actual price via API — not in static HTML
     elif "parking-lander" in lower_text:
         purchase_url = _GODADDY_URL.format(domain=domain)
@@ -535,6 +551,22 @@ async def _check_parking_page(client: httpx.AsyncClient, domain: str, timeout: f
                 logger.info("[%s] parking-lander PW: Afternic check failed — marking unknown", domain)
                 return _result(domain, "unknown", purchase_url=purchase_url), True
             logger.info("[%s] parking-lander PW: not on Afternic (title=%r) — marking taken", domain, pw_title[:60])
+            return _result(domain, "taken"), True
+        else:
+            # No PW marker — not enrolled in Afternic listing program. Verify before marking for_sale.
+            canonical = f"https://www.afternic.com/forsale/{domain}"
+            try:
+                r_np = await client.get(canonical, headers=_BROWSER_HEADERS, timeout=8)
+                np_title = (BeautifulSoup(r_np.text, "lxml").title.string or "").lower()
+            except Exception:
+                np_title = ""
+            if "for sale" in np_title:
+                logger.info("[%s] parking-lander non-PW: Afternic listing confirmed — marking for_sale", domain)
+                return _result(domain, "for_sale", purchase_url=purchase_url), True
+            if not np_title:
+                logger.info("[%s] parking-lander non-PW: Afternic check failed — marking unknown", domain)
+                return _result(domain, "unknown", purchase_url=purchase_url), True
+            logger.info("[%s] parking-lander non-PW: not on Afternic (title=%r) — marking taken", domain, np_title[:60])
             return _result(domain, "taken"), True
         price = None
     elif "spaceship" in lower_text:
@@ -582,10 +614,14 @@ async def check_domain(client: httpx.AsyncClient, domain: str) -> dict:
             price = await _fetch_hugedomains_price(client, domain)
             return _result(domain, "for_sale", price=price, purchase_url=parking_url)
 
-        # BrandBucket: no HTTP server — probe always times out. Trust NS directly.
-        # Fruits.co: JS-rendered marketplace — price from static HTML is unreliable. Trust NS directly.
-        if "brandbucket.com" in parking_url or "fruits.co" in parking_url:
+        # BrandBucket: no HTTP server — probe always times out.
+        # Curated marketplace: NS ownership = definitive active listing. URL format is established.
+        if "brandbucket.com" in parking_url:
             return _result(domain, "for_sale", purchase_url=parking_url)
+
+        # Fruits.co: JS-rendered — cannot verify listing via HTTP probe, URL format unconfirmed.
+        if "fruits.co" in parking_url:
+            return _result(domain, "unknown", purchase_url=parking_url)
 
         # BuyDomains: Cloudflare 403 blocks probing and the site is a JS SPA so we cannot
         # confirm whether the domain is actively listed. NS match means it *may* be for sale
