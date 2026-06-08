@@ -1,0 +1,116 @@
+/* ── Theme tokens (shared across both tabs) ── */
+:root {
+  --bg-page:           #f8fafc;
+  --bg-card:           #ffffff;
+  --bg-thead:          #334155;
+  --border-thead:      #1e293b;
+  --text-thead:        #e2e8f0;
+  --bg-hover:          #f8fafc;
+  --bg-detail:         #fafafa;
+  --bg-input:          #ffffff;
+  --bg-price-sym:      #f8fafc;
+  --border:            #e2e8f0;
+  --border-mid:        #cbd5e1;
+  --text-primary:      #111111;
+  --text-secondary:    #374151;
+  --text-muted:        #64748b;
+  --text-faint:        #94a3b8;
+  --chip-checked-bg:   #ede9ff;
+  --badge-neutral-bg:  #f1f5f9;
+  --badge-neutral-clr: #94a3b8;
+  --badge-green-bg:    #dcfce7;
+  --badge-green-clr:   #15803d;
+  --badge-amber-bg:    #fef3c7;
+  --badge-amber-clr:   #b45309;
+  --badge-yellow-bg:   #fef9c3;
+  --badge-yellow-clr:  #854d0e;
+  --badge-red-bg:      #fee2e2;
+  --badge-red-clr:     #b91c1c;
+  --error-bg:          #fef2f2;
+  --error-border:      #fecaca;
+  --error-clr:         #b91c1c;
+  --spinner-track:     #e2e8f0;
+  --stream-border:     #334155;
+  --divider-color:     #94a3b8;
+}
+
+[data-theme="dark"] {
+  --bg-page:           #0f172a;
+  --bg-card:           #1e293b;
+  --bg-thead:          #1e3a52;
+  --border-thead:      #0f1f2e;
+  --text-thead:        #e2e8f0;
+  --bg-hover:          #243447;
+  --bg-detail:         #192234;
+  --bg-input:          #152030;
+  --bg-price-sym:      #152030;
+  --border:            #334155;
+  --border-mid:        #475569;
+  --text-primary:      #f1f5f9;
+  --text-secondary:    #cbd5e1;
+  --text-muted:        #94a3b8;
+  --text-faint:        #64748b;
+  --chip-checked-bg:   #2d1f6e;
+  --badge-neutral-bg:  #243447;
+  --badge-neutral-clr: #64748b;
+  --badge-green-bg:    rgba(34,197,94,0.15);
+  --badge-green-clr:   #4ade80;
+  --badge-amber-bg:    rgba(251,191,36,0.15);
+  --badge-amber-clr:   #fbbf24;
+  --badge-yellow-bg:   rgba(251,191,36,0.12);
+  --badge-yellow-clr:  #fbbf24;
+  --badge-red-bg:      rgba(239,68,68,0.15);
+  --badge-red-clr:     #f87171;
+  --error-bg:          rgba(239,68,68,0.08);
+  --error-border:      rgba(239,68,68,0.25);
+  --error-clr:         #f87171;
+  --spinner-track:     #334155;
+  --stream-border:     #475569;
+  --divider-color:     #475569;
+}
+
+body { background: var(--bg-page); color: var(--text-primary); }
+
+/* ── Shell layout ── */
+.nf-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.nf-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem 0;
+}
+
+.nf-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.nf-header h1 span { color: #6c47ff; }
+
+
+.btn-theme {
+  margin-left: auto;
+  padding: 0.4rem 0.9rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-mid);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.btn-theme:hover { border-color: #6c47ff; color: #6c47ff; }
+
+/* ── Tab panels ── */
+.nf-panel {
+  padding: 1.5rem;
+  flex: 1;
+}
