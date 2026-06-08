@@ -2,108 +2,75 @@
 
 AI-powered startup name generator with live domain availability checking.
 
-Type a few keywords, get AI-generated name ideas, and instantly see which `.com`, `.io`, `.ai`, etc. domains are available, taken, or for sale — with prices.
-
 ---
 
-## Prerequisites
+## Setup (first time only)
 
-- **Python 3.11+** — [python.org](https://www.python.org/downloads/)
-- **Node.js 18+** — [nodejs.org](https://nodejs.org/)
-- **Git** — [git-scm.com](https://git-scm.com/downloads/)
+### 1. Install these three things
 
----
+- **Python** — [python.org/downloads](https://www.python.org/downloads/) — click the big yellow Download button, run the installer. **Check the box that says "Add Python to PATH"** before clicking Install.
+- **Node.js** — [nodejs.org](https://nodejs.org/) — download the LTS version, run the installer, keep clicking Next.
+- **Git** — [git-scm.com/downloads](https://git-scm.com/downloads) — download for your OS, run the installer, keep clicking Next.
 
-## Quick start
+### 2. Open a terminal
 
-### Step 1 — Clone the repo
+**Windows:** Press `Win + R`, type `cmd`, press Enter. A black window opens.
 
-```bash
+**Mac:** Press `Cmd + Space`, type `Terminal`, press Enter.
+
+### 3. Paste these two commands (one at a time, press Enter after each)
+
+```
 git clone https://github.com/CHE0T/namefinder.git
+```
+```
 cd namefinder
 ```
 
-### Step 2 — Start the app
-
-#### Windows
-
-Double-click `scripts\start.bat`.
-
-It will automatically create virtual environments, install all dependencies, and open three terminal windows (one per service). First run takes a minute for installs; subsequent runs are instant.
-
-Open **http://localhost:5173** in your browser.
-
-#### Mac / Linux
-
-```bash
-chmod +x scripts/start.sh
-./scripts/start.sh
-```
-
-Open **http://localhost:5173** in your browser.
+This downloads the project and moves into the folder.
 
 ---
 
-## Manual setup (if the scripts don't work)
+## Running the app
 
-The app is three processes. Run each in a separate terminal:
+### Windows
 
-**1. Domain checker backend (port 8001)**
-```bash
-cd domainscraper
-python3 -m venv .venv
+In File Explorer, open the `namefinder` folder → open `scripts` → double-click `start.bat`.
 
-# Windows:
-.venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\python -m uvicorn main:app --port 8001
+Three terminal windows will open. The first time it runs it installs dependencies — this takes about a minute. Once you see lines saying things are running, move on.
 
-# Mac / Linux:
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python -m uvicorn main:app --port 8001
+### Mac / Linux
+
+In the terminal (still in the `namefinder` folder from above), paste:
+
 ```
-
-**2. Name generator backend (port 8002)**
-```bash
-cd namegenerator
-python3 -m venv .venv
-
-# Windows:
-.venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\python -m uvicorn main:app --port 8002
-
-# Mac / Linux:
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python -m uvicorn main:app --port 8002
+chmod +x scripts/start.sh && ./scripts/start.sh
 ```
-
-**3. Frontend (port 5173)**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Then open **http://localhost:5173**.
 
 ---
 
-## How it works
+## Open the app
 
-```
-Browser (localhost:5173)
-    │
-    ├─ /api/gen/*    → Vite proxy → namegenerator  (localhost:8002)
-    └─ /api/domain/* → Vite proxy → domainscraper  (localhost:8001)
-```
+Open your browser and go to:
 
-- **namegenerator**: calls the Claude API to generate startup name ideas from your keywords
-- **domainscraper**: checks domain availability via RDAP/WHOIS, detects parking pages, identifies aftermarket listings (GoDaddy/Afternic, HugeDomains, Spaceship, etc.)
-- **frontend**: React + Vite, streams results live as they come in, saves session to localStorage
+**http://localhost:5173**
 
 ---
 
 ## Stopping
 
-**Windows:** Close the three terminal windows, or run `scripts\stop.bat` (if present).
+**Windows:** Close the three terminal windows that opened.
 
-**Mac / Linux:** Press `Ctrl+C` in the terminal running `start.sh`.
+**Mac / Linux:** Press `Ctrl+C` in the terminal.
+
+---
+
+## Running it again later
+
+You don't need to clone or install again. Just:
+
+**Windows:** Open the `namefinder` folder → `scripts` → double-click `start.bat`.
+
+**Mac / Linux:** Open a terminal, `cd` into the `namefinder` folder, run `./scripts/start.sh`.
+
+Then open **http://localhost:5173**.
